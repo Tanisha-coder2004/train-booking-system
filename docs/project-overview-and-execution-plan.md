@@ -12,6 +12,10 @@ It converts the manager direction into an actionable plan:
 - BE defines database calls, cache calls, and microservice break-up
 - produce a final coordinated output
 
+## Contribution Guide
+
+For external contributors, see [how-to-contribute.md](../how-to-contribute.md) for instructions on raising pull requests, code style, and backend contribution process. Clone the repository from [https://github.com/AmanSharma1728/train-booking-system.git](https://github.com/AmanSharma1728/train-booking-system.git) and coordinate with the project maintainer before making major backend changes.
+
 ## 2. Project Summary
 
 The project is a Train Ticket Booking System with Redis support for caching, session handling, seat holding, and concurrency-sensitive inventory control.

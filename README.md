@@ -82,8 +82,8 @@ Train Ticket Booking System is a full-stack web application for booking train ti
 ### 1. Clone the Repository
 
 ```
-git clone https://github.com/your-org/train-booking-project.git
-cd train-booking-project
+git clone https://github.com/AmanSharma1728/train-booking-system.git
+cd train-booking-system
 ```
 
 ### 2. Setup Backend
@@ -127,11 +127,12 @@ npm run dev
 
 ## Contributing
 
-1. Read the SRS and requirements documents
-2. Follow the contract-driven development process
-3. Ensure all API changes are documented and versioned
-4. Write tests for all major features
-5. Use feature branches and pull requests for all changes
+See [how-to-contribute.md](how-to-contribute.md) for detailed contribution guidelines, including how to raise pull requests, branch naming, and backend contribution notes.
+
+**Backend contributions:**
+
+- If you want to add backend features, please read the backend docs and coordinate with the project maintainer (currently the frontend developer) before making major changes.
+- Open an issue or discussion before starting large backend work.
 
 ---
 
