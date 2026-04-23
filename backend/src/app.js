@@ -5,22 +5,45 @@ const logger = require("./shared/utils/logger");
 
 const app = express();
 
-// Middlewares
+// ======================
+// Global Middlewares
+// ======================
 app.use(cors());
 app.use(express.json());
 
-// Health check (VERY IMPORTANT in production)
+// ======================
+// Health Check
+// ======================
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
-// Routes (we'll add later)
-app.use("/api", routes);
+// ======================
+// Routes
+// ======================
+app.use("/api/v1", routes);
+// ======================
+// 404 Handler (IMPORTANT)
+// ======================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+  });
+});
 
-// Global error handler (basic for now)
+// ======================
+// Global Error Handler
+// ======================
 app.use((err, req, res, next) => {
-  logger.error(err.message);
-  res.status(500).json({ error: "Internal Server Error" });
+  logger.error(err.stack || err.message);
+
+  const status = err.status || 500;
+
+  res.status(status).json({
+    success: false,
+    error: err.message || "Internal Server Error",
+  });
 });
 
 module.exports = app;
