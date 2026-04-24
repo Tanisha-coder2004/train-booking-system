@@ -4,7 +4,11 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const path = require("path");
 
-const routes = require("./routes");
+// ======================
+// Route Imports
+// ======================
+const authRoutes = require("./routes"); // Your Auth/User handler
+const trainRoutes = require("./modules/train/train.routes"); // Tanisha's Train handler
 const logger = require("./shared/utils/logger");
 
 const app = express();
@@ -30,9 +34,16 @@ app.get("/health", (req, res) => {
 });
 
 // ======================
-// Routes
+// Routes Integration
 // ======================
-app.use("/api/v1", routes);
+
+/**
+ * Both are mounted at /api/v1. 
+ * authRoutes handles /api/v1/auth
+ * trainRoutes handles /api/v1/trains
+ */
+app.use("/api/v1", authRoutes); 
+app.use("/api/v1", trainRoutes);
 
 // ======================
 // Swagger Docs
@@ -44,7 +55,7 @@ app.use(
 );
 
 // ======================
-// 404 Handler
+// Error Handlers
 // ======================
 app.use((req, res) => {
   res.status(404).json({
@@ -53,9 +64,6 @@ app.use((req, res) => {
   });
 });
 
-// ======================
-// Global Error Handler
-// ======================
 app.use((err, req, res, next) => {
   logger.error(err.stack || err.message);
 

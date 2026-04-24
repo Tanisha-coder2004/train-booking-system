@@ -12,6 +12,7 @@
     "api:mock": "npx @stoplight/prism-cli mock docs/openapi.yaml -p 4004",
     "api:docs": "echo 'View docs at http://localhost:3000/api-docs'",
     "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "keywords": [],
   "author": "",
