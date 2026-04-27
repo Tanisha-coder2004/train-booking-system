@@ -1,38 +1,33 @@
 .navbar {
-  position: fixed;
-  top: 1rem;
+  position: absolute;
+  top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
+  max-width: 700px;
   width: calc(100% - 2rem);
-  max-width: 1200px;
-  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 2.5rem;
-  border-radius: 2rem; // Matches the rounded theme
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-  
-  // Use glassmorphism logic directly
+  padding: 0.5rem 1.25rem;
   background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  z-index: 1000;
 
-  a {
-    transition: var(--transition);
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text-main);
+  .logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #1e293b;
     text-decoration: none;
-    padding: 0.6rem 1.25rem;
-    border-radius: 1.25rem;
-    letter-spacing: -0.3px;
-
-    &:hover {
-      color: var(--primary);
-      background: hsl(221, 83%, 94%);
-    }
+    transition: transform 0.2s ease;
+    &:hover { transform: scale(1.02); }
+    .icon { font-size: 1.25rem; }
   }
 
   .nav-links {
@@ -40,35 +35,64 @@
     align-items: center;
     gap: 1.25rem;
 
-    .register-btn {
-      padding: 0.7rem 1.75rem;
-      font-size: 1rem;
+    .nav-item {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s ease;
+      &:hover { color: #1e293b; }
+      svg { opacity: 0.7; }
+    }
 
+    .register-btn {
+      padding: 0.45rem 1.1rem;
+      background: #1e293b;
+      color: #fff !important;
+      font-size: 0.72rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
       &:hover {
-        color: hsl(0, 0%, 100%);
-        background: linear-gradient(135deg, hsl(221, 83%, 53%), hsl(221, 83%, 45%));
-        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        background: #0f172a;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(30, 41, 59, 0.1);
+      }
+    }
+
+    .logout-btn {
+      background: #f1f5f9;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      color: #64748b;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: #fee2e2;
+        color: #ef4444;
       }
     }
   }
+}
 
-  .logo {
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: -1.2px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--primary);
-    padding: 0;
-    background: transparent;
-
-    &:hover {
-      background: transparent;
-    }
-    
-    span {
-      color: var(--text-main);
-    }
+@media (max-width: 600px) {
+  .navbar {
+    width: calc(100% - 1rem);
+    padding: 0.5rem 1rem;
+    .nav-links .nav-item:not([href="/bookings"]) { display: none; }
   }
 }

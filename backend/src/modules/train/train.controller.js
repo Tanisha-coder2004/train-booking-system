@@ -5,19 +5,16 @@ const TrainService = require("./train.service")
         this.trainService = TrainService
     }
 
-    searchTrain = async (req,res)=>{
+    searchTrain = async (req, res) => {
         try {
-            const {src,dest,date} = req.query
-            const train = await this.trainService.searchTrains(src,dest,date);
-            return res.status(200).json({
-                message:"train searched successfully",
-                train
-            })
+            const { src, dest, date } = req.query;
+            const trains = await this.trainService.searchTrains(src, dest, date);
+            return res.status(200).json(trains);
         } catch (error) {
             return res.status(500).json({
-                success:false,
-                message:error.message
-            })
+                success: false,
+                error: error.message
+            });
         }
     }
 }

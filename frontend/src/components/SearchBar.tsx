@@ -11,10 +11,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ variant = 'standard' }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   
+  const today = new Date().toISOString().split('T')[0];
   const [values, setValues] = useState({
-    source: searchParams.get('source') || 'New Delhi',
-    destination: searchParams.get('destination') || 'Mumbai Central',
-    date: searchParams.get('date') || '2026-05-10'
+    src: searchParams.get('src') || 'New Delhi',
+    dest: searchParams.get('dest') || 'Mumbai Central',
+    date: searchParams.get('date') || today
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -31,8 +32,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ variant = 'standard' }) => {
           <input 
             type="text" 
             placeholder="Departure Station" 
-            value={values.source}
-            onChange={(e) => setValues({...values, source: e.target.value})}
+            value={values.src}
+            onChange={(e) => setValues({...values, src: e.target.value})}
             required
           />
         </div>
@@ -42,8 +43,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ variant = 'standard' }) => {
           <input 
             type="text" 
             placeholder="Arrival Station" 
-            value={values.destination}
-            onChange={(e) => setValues({...values, destination: e.target.value})}
+            value={values.dest}
+            onChange={(e) => setValues({...values, dest: e.target.value})}
             required
           />
         </div>
@@ -59,10 +60,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ variant = 'standard' }) => {
         </div>
       </div>
 
-      <button type="submit" className="search-btn btn-primary">
-        <Search size={20} />
-        <span>Search Trains</span>
-      </button>
+      <div className="action-wrapper">
+        <button type="submit" className="search-btn">
+          <Search size={14} />
+          <span>Search Trains</span>
+        </button>
+      </div>
     </form>
   );
 };

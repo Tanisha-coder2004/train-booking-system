@@ -5,6 +5,10 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Search from "./pages/Search";
+import TrainDetails from "./pages/TrainDetails";
+import Payment from "./pages/Payment";
+import Register from "./pages/Register";
+import Confirmation from "./pages/Confirmation";
 
 const App = () => {
   return (
@@ -15,7 +19,12 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/train/:id" element={<TrainDetails />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/confirmation/:id" element={<Confirmation />} />
+            <Route path="/bookings" element={<div style={{padding: '100px', textAlign: 'center'}}><h2>My Bookings — Next Phase</h2><p>Coming up in the next issue.</p></div>} />
           </Routes>
         </main>
         <Footer />

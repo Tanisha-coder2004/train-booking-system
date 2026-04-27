@@ -238,11 +238,11 @@ paths:
       summary: Search for trains
       tags: [Trains]
       parameters:
-        - name: source
+        - name: src
           in: query
           required: true
           schema: { type: string }
-        - name: destination
+        - name: dest
           in: query
           required: true
           schema: { type: string }

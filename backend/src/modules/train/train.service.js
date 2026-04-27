@@ -31,10 +31,9 @@ class TrainService {
       logger.error("Redis Get Error: " + err.message);
     }
 
-    const query = {
-      src: from,
-      dest: to,
-    };
+    const query = {};
+    if (from) query.src = { $regex: new RegExp(`^${from}$`, "i") };
+    if (to) query.dest = { $regex: new RegExp(`^${to}$`, "i") };
 
     if (date) {
       query.date = date;
