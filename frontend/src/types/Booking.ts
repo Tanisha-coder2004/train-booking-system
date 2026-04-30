@@ -42,6 +42,7 @@ export interface Ticket {
   // [FE] EXPIRED — derived: journey date+time is in the past. Use getDisplayStatus() to resolve.
   status: "SEAT_HELD" | "PAYMENT_PENDING" | "CONFIRMED" | "RAC" | "WAITLISTED" | "CANCELLED" | "EXPIRED";
   pnr?: string;                 // Allocated after confirmation
+  seatInfo?: string;            // e.g. "B2-42"
   ttl?: string;                 // ISO timestamp — seat hold expiry countdown. Only present when status is "SEAT_HELD".
   requestedSeats: number;
 }

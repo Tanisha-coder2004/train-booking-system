@@ -47,9 +47,8 @@ const Confirmation = () => {
     );
   }
 
-  // Mock Coach and Seat Assignment if missing
-  const coach = "B2";
-  const startSeat = 42;
+  // Coach and Seat Assignment from backend
+  const seatInfo = booking.seatInfo || "B2-42";
 
   return (
     <div className="confirmation-page">
@@ -69,6 +68,7 @@ const Confirmation = () => {
             <div className="logo-group">
               <span className="logo-icon">🚅</span>
               <span className="logo-text">TrainTick <span>Official Pass</span></span>
+              <div className="train-id-badge">{booking.trainName}</div>
             </div>
             <div className="pnr-box">
               <label>PNR NUMBER</label>
@@ -107,7 +107,7 @@ const Confirmation = () => {
               </div>
               <div className="meta-item">
                 <label><MapPin size={12} /> COACH & SEAT</label>
-                <span>{coach} / {startSeat}{booking.passengers.length > 1 ? ` - ${startSeat + booking.passengers.length - 1}` : ''}</span>
+                <span>{seatInfo}</span>
               </div>
             </div>
 
