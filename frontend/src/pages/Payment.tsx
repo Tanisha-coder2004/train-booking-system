@@ -3,16 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import { CreditCard, Smartphone, Landmark, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 import { useToast } from "../context/ToastContext";
+import { useAuth } from "../hooks/useAuth";
 import "./Payment.scss";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 const Payment = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { user } = useAuth();
   const [holdData, setHoldData] = useState<any>(null);
   const [timeLeft, setTimeLeft] = useState(120);
   const [selectedMethod, setSelectedMethod] = useState("upi");
-  const [showMockGateway, setShowMockGateway] = useState(false);
-  const [gatewayStep, setGatewayStep] = useState<"IDLE" | "AUTHORIZING" | "VERIFYING" | "SUCCESS">("IDLE");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<"IDLE" | "SUCCESS">("IDLE");
 
   useEffect(() => {
     const data = localStorage.getItem('currentHold');
@@ -51,59 +59,79 @@ const Payment = () => {
   const handlePayment = async () => {
     if (!holdData?.holdId) return;
 
-    setShowMockGateway(true);
-    setGatewayStep("AUTHORIZING");
+    try {
+      // 1. Get Order ID from Backend
+      const orderData = await api.initiatePayment(holdData.holdId);
 
-    setTimeout(async () => {
-      setGatewayStep("VERIFYING");
+      // 2. Open Razorpay Modal
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.totalFare * 100,
+        currency: "INR",
+        name: "TrainTick Official",
+        description: "Secure Train Ticket Booking",
+        order_id: orderData.razorpay_order_id,
+        handler: async (response: any) => {
+          // 3. Verify Payment Signature
+          setIsVerifying(true);
+          try {
+            await api.verifyPayment({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              holdId: holdData.holdId
+            });
 
-      try {
-        const confirmRes: any = await api.initiatePayment(holdData.holdId);
+            setPaymentStatus("SUCCESS");
+            setTimeout(() => {
+              localStorage.removeItem('currentHold');
+              navigate(`/confirmation/${holdData.holdId}`);
+            }, 1500);
+          } catch (err) {
+            console.error("Verification failed:", err);
+            setIsVerifying(false);
+            showToast("Payment verification failed. Please contact support.", "error");
+          }
+        },
+        prefill: {
+          name: user?.name || "Guest",
+          email: user?.email || ""
+        },
+        theme: {
+          color: "#1e293b"
+        },
+        modal: {
+          ondismiss: function() {
+            console.log("Checkout modal closed by user");
+          }
+        }
+      };
 
-        // Final Verification Step (In a real app, this would happen in Razorpay handler)
-        await api.verifyPayment({
-          razorpay_order_id: confirmRes.razorpay_order_id,
-          razorpay_payment_id: "pay_mock_" + Math.random().toString(36).substr(2, 9),
-          razorpay_signature: "mock_signature",
-          holdId: holdData.holdId
-        });
+      const rzp = new window.Razorpay(options);
+      rzp.open();
 
-        setGatewayStep("SUCCESS");
-        setTimeout(() => {
-          localStorage.removeItem('currentHold');
-          navigate(`/confirmation/${holdData.holdId}`);
-        }, 1500);
-      } catch (err) {
-        setGatewayStep("IDLE");
-        setShowMockGateway(false);
-        showToast("Payment failed during verification. Your seat hold may have expired.", "error");
-      }
-    }, 2500);
+    } catch (err) {
+      console.error("Payment initiation failed:", err);
+      showToast("Failed to initiate payment. Please try again.", "error");
+    }
   };
 
   if (!holdData) return null;
 
   return (
     <div className="payment-page">
-      {showMockGateway && (
+      {(isVerifying || paymentStatus === "SUCCESS") && (
         <div className="mock-gateway-overlay">
           <div className="gateway-modal">
             <div className="modal-content">
-              {gatewayStep === "AUTHORIZING" && (
+              {isVerifying && (
                 <>
-                  <div className="spinner"></div>
-                  <h2>Secure Payment</h2>
-                  <p>Contacting your bank for authorization...</p>
+                   <div className="spinner"></div>
+                   <h2>Verifying Transaction</h2>
+                   <p>Securing your seats and finalising PNR...</p>
                 </>
               )}
-              {gatewayStep === "VERIFYING" && (
-                <>
-                  <div className="spinner"></div>
-                  <h2>Verifying</h2>
-                  <p>Securing your seats and finalising PNR...</p>
-                </>
-              )}
-              {gatewayStep === "SUCCESS" && (
+              {paymentStatus === "SUCCESS" && (
                 <>
                   <div className="success-icon"><CheckCircle2 size={48} /></div>
                   <h2>Payment Successful</h2>
@@ -225,9 +253,9 @@ const Payment = () => {
             <button
               className="pay-btn"
               onClick={handlePayment}
-              disabled={showMockGateway}
+              disabled={isVerifying}
             >
-              {showMockGateway ? 'Processing...' : `Pay ₹${holdData.totalFare + 45}`}
+              {isVerifying ? 'Processing...' : `Pay ₹${holdData.totalFare + 45}`}
             </button>
           </div>
         </aside>

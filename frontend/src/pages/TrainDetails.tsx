@@ -92,7 +92,7 @@ const TrainDetails = () => {
         passengersCount: passengers.length,
       }));
       
-      showToast("Seats secured! You have 1 minute to pay.", "success");
+      showToast("Seats secured! You have 2 minutes to pay.", "success");
       navigate('/payment');
     } catch (err) {
       console.error("Hold failed:", err);
@@ -265,7 +265,7 @@ const TrainDetails = () => {
 
             <div className="security-note">
               <ShieldCheck size={16} />
-              <p>Seats are held for 1 minute once you click book.</p>
+              <p>Seats are held for 2 minutes once you click book.</p>
             </div>
 
             {validationError && (
